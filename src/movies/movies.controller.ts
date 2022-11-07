@@ -1,5 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
+import { GetMoviesFilterDto } from './dto/get-movies-filter.dto';
 import { Movie } from './movie.model';
 import { MoviesService } from './movies.service';
 
@@ -8,8 +17,10 @@ export class MoviesController {
   constructor(private moviesService: MoviesService) {}
 
   @Get()
-  getAllMovies(): Movie[] {
-    return this.moviesService.getAllMovies();
+  getAllMovies(@Query() filterDto: GetMoviesFilterDto): Movie[] {
+    if (Object.keys(filterDto).length) {
+      return this.moviesService.getMoviesByFilter(filterDto);
+    } else return this.moviesService.getAllMovies();
   }
 
   @Get('/:id')

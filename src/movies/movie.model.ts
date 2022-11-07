@@ -2,6 +2,7 @@ export interface Movie {
   id: string;
   title: string;
   description: string;
+  category: string;
   fav: MovieFav;
 }
 
