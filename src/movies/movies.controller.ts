@@ -4,11 +4,13 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { GetMoviesFilterDto } from './dto/get-movies-filter.dto';
+import { ReviewMovieDto } from './dto/review-movie.dto';
 import { Movie } from './movie.model';
 import { MoviesService } from './movies.service';
 
@@ -31,6 +33,14 @@ export class MoviesController {
   @Post()
   createMovie(@Body() createMovieDto: CreateMovieDto) {
     return this.moviesService.createMovie(createMovieDto);
+  }
+
+  @Patch('/:id/review')
+  addReviewMovie(
+    @Param('id') id: string,
+    @Body() reviewMovieDto: ReviewMovieDto,
+  ) {
+    return this.moviesService.addReviewMovie(id, reviewMovieDto.review);
   }
 
   @Delete('/:id')

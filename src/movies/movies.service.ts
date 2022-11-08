@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Movie, MovieFav } from './movie.model';
 import { v4 as uuid } from 'uuid';
 import { CreateMovieDto } from './dto/create-movie.dto';
@@ -29,7 +29,17 @@ export class MoviesService {
   }
 
   getMovieById(id: string): Movie {
-    return this.movies.find((movie) => movie.id === id);
+    const found = this.movies.find((movie) => movie.id === id);
+    if (!found) {
+      throw new NotFoundException('Movie Not Found');
+    }
+
+    return found;
+  }
+  addReviewMovie(id: string, review: string) {
+    const movie = this.getMovieById(id);
+    movie.review = review;
+    return movie;
   }
 
   createMovie(createMovieDto: CreateMovieDto): Movie {
@@ -46,6 +56,7 @@ export class MoviesService {
   }
 
   deleteMovieById(id: string): string {
+    const found = this.getMovieById(id);
     this.movies = this.movies.filter((movie) => movie.id !== id);
     return 'Movie Deleted';
   }
